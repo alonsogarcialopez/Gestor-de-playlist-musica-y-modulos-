@@ -5,14 +5,16 @@ from operaciones import (
     buscarCancion,
     eliminarCancion,
     guardarArchivo,
+    cargarPlaylist,
+    recomendarMusica
 )
 
-playlist = []
+playlist = cargarPlaylist()
 opcion = ""
 
-while opcion != "6":
+while opcion != "7":
     mostrarMenu()
-    opcion = input("Elige una opción (1-6): ").strip()
+    opcion = input("Elige una opción (1-7): ").strip()
 
     if opcion == "1":
         registrar = agregarCancion(playlist) 
@@ -25,6 +27,9 @@ while opcion != "6":
     elif opcion == "5":
         guardarArchivo(playlist)
     elif opcion == "6":
-        print("Saliendo de la playlist. byeee")
+        recomendarMusica()
+    elif opcion == "7":
+        print("saliendo del programa, byeeee")
+
     else:
-        print("Opción no válida. Por favor, elige una opción del 1 al 6.")
+        print("Opción no válida. Por favor, elige una opción del 1 al 7.")

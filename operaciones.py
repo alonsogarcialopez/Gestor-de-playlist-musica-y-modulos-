@@ -1,3 +1,7 @@
+import os
+import json
+
+RUTA_JSON = "playlist.json"
 def agregarCancion(playlist):
     print("\n--- Agregar Canción ---")
     titulo = input("Título de la canción: ").strip()
@@ -13,7 +17,7 @@ def agregarCancion(playlist):
     cancion = {"titulo": titulo, "artista": artista}
     playlist += [cancion]
     print(f" '{titulo}' de {artista} agregada con éxito.")
-
+    guardar_playlist(playlist)
 
 def mostrarPlaylist(playlist):
     print("\n --- LISTA DE REPRODUCCIÓN --- ")
@@ -91,6 +95,7 @@ def eliminarCancion(playlist):
     if posicionAborrar != -1:
         del playlist[posicionAborrar]
         print(f" La canción '{buscada}' fue eliminada de la playlist.")
+        guardar_playlist(playlist)
     else:
         print(" No se encontró ninguna canción con ese título.")
 
@@ -115,4 +120,48 @@ def guardarArchivo(playlist):
         posicion += 1
 
     archivo.close()
-    print("¡Archivo 'mi_playlist.txt' generado con éxito en tu carpeta!")
+    print("Archivo 'mi_playlist.txt' generado con éxito en tu carpeta!")
+
+def cargarPlaylist():
+    """Carga la playlist desde el archivo JSON automáticamente."""
+    if not os.path.exists(RUTA_JSON):
+        return []
+    try:
+        with open(RUTA_JSON, "r", encoding="utf-8") as archivo:
+            return json.load(archivo)
+    except json.JSONDecodeError:
+        return []
+
+def guardar_playlist(playlist):
+    """Guarda la playlist actual en formato JSON."""
+    with open(RUTA_JSON, "w", encoding="utf-8") as archivo:
+        json.dump(playlist, archivo, indent=4, ensure_ascii=False)
+
+# Base de datos de recomendaciones musicales
+RECOMENDACIONES = {
+    "rap": {
+        "artistas": ["Travis Scott", "Arcángel", "Drake"],
+        "canciones": ["SICKO MODE", "La Jumpa", "God's Plan"]
+    },
+    "corridos tumbados": {
+        "artistas": ["Calle 24", "Peso Pluma", "Natanael Cano"],
+        "canciones": ["Ella Baila Sola", "PCR"]
+    },
+    "pop": {
+        "artistas": ["The Weekend", "Dua Lipa", "Taylor Swift"],
+        "canciones": ["Blinding Lights", "Levitating"]
+    }
+}
+
+def recomendarMusica():
+    """Recomienda artistas y canciones según el género del usuario."""
+    print("\n---  RECOMENDACIONES DE MÚSICA ---")
+    genero = input("Cuál es tu género musical favorito? (ej. rap, pop, corridos tumbados): ").strip().lower()
+
+    if genero in RECOMENDACIONES:
+        datos = RECOMENDACIONES[genero]
+        print(f"\nExcelente! Para los amantes del {genero}:")
+        print(f"Artistas sugeridos: {', '.join(datos['artistas'])}")
+        print(f"Canciones sugeridas: {', '.join(datos['canciones'])}")
+    else:
+        print(f"\nDel género '{genero}' no tenemos sugerencias registradas aún")
